@@ -69,5 +69,19 @@ $(".submitbtn").on("click", function(event) {
         
         console.log('cityNameel:', cityNameEl);
         $('.city-results').append(displayMainDate, currentIcon, tempEL, humidEl, windEl);
+
+        var lat = response.coord.lat;
+        var lon = response.coord.lon;
+        var queryURLUV = "https://api.openweathermap.org/data/2.5/uvi?&appid=ecc0be5fd92206da3aa90cc41c13ca56&lat=" + lat  + "&lon=" + lon;
+
+        $.ajax({
+            url: queryURLUV,
+            method: 'GET'
+        }).then(function (response) {
+            console.log(queryURLUV);
+            var uvlresultsEl = $("<p>").text("UV Index: " + response.value);
+            $('.city-results').append(uvlresultsEl);
+    
+        });
     });
   });
