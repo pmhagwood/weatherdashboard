@@ -1,5 +1,6 @@
 var cityName;
 var mainDate = moment().format('L');
+var cityArray = [];
 
 // html for city info
 
@@ -12,14 +13,31 @@ function buildQueryURL() {
     .val()
     .trim();
 
-    console.log("city name: ", cityName);
-    console.log(startURL + cityName + apiKey);
-    console.log("date is: ", mainDate);
+    // console.log("city name: ", cityName);
+    // console.log(startURL + cityName + apiKey);
+    // console.log("date is: ", mainDate);
+    
+
+    // Build city history array
+    if(cityArray.length < 8){
+        cityArray.push(cityName);
+    } else {
+        cityArray.shift();
+        cityArray.push(cityName);
+    }
+    $('.list-group').empty();
+    for(var i=0; i < cityArray.length; i++){
+        var btn = $('<button>')
+        .addClass("list-group-item list-group-item-action city")
+        .text(cityArray[i]);
+        $('.list-group').prepend(btn);
+        console.log('cityarray ', cityArray[i]);
+    }
     return queryURL = startURL + cityName + apiKey;
 }
 
 
-function updatePage(){
+function updatePage(city){
     // Make the AJAX request to the API - GETs the JSON data at the queryURL.
     // The data then gets passed as an argument to the updatePage function
     $.ajax({
@@ -75,15 +93,27 @@ function updatePage(){
       
           });
       });
-
+      // forecast URL for gathering info for forecast blocks
       var forcastURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=568b20af6adfa0aa216b56bfc3c3b3de";
       // get the forecast API info
+      
       $.ajax({
         url: forcastURL,
         method: "GET"
       }).then(function (response3){
             var results = response3.list;
           console.log('forcast info is: ', results);
+          console.log('forecastURL is :', forcastURL);
+        for (var i = 0; i <= results.length; i+=8){
+            var date = results[i].dt_txt;
+            var setDate = date.substr(0,10);
+            var temp = results[i].main.temp;
+            var setTemp = (temp - 273.15) * 1.8 + 32;
+            console.log('date is ', setDate);
+            console.log('temp is :', setTemp.toFixed(0), "°F");
+            // add day + i 
+        }
+         
       });
 
 }
@@ -107,3 +137,5 @@ $(".submitbtn").on("click", function(event) {
     updatePage();
     
   });
+
+  // save city history to localstorage use that to populate page 
