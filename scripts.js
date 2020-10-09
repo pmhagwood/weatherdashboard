@@ -45,29 +45,15 @@ function updatePage(city){
         method: "GET"
       }).then(function (response){
           console.log(response);
-          console.log(queryURL);
-          var currentweather = response.weather[0].main;
-  
-          console.log ("current weather: ", currentweather);
-  
-          if (currentweather === "Rain") {
-              var currentIcon = $('<img>').attr("src", "http://openweathermap.org/img/wn/09d.png");
-              currentIcon.attr("style", "height: 60px; width: 60px");
-          } else if (currentweather=== "Clouds") {
-              var currentIcon = $('<img>').attr("src", "http://openweathermap.org/img/wn/03d.png");
-              currentIcon.attr("style", "height: 60px; width: 60px");
-          } else if (currentweather === "Clear") {
-              var currentIcon = $('<img>').attr("src", "http://openweathermap.org/img/wn/01d.png");
-              currentIcon.attr("style", "height: 60px; width: 60px");
-          }
-           else if (currentweather === "Drizzle") {
-              var currentIcon = $('<img>').attr("src", "http://openweathermap.org/img/wn/10d.png");
-              currentIcon.attr("style", "height: 60px; width: 60px");
-          }
-           else if (currentweather === "Snow") {
-              var currentIcon = $('<img>').attr("src", "http://openweathermap.org/img/wn/13d.png");
-              currentIcon.attr("style", "height: 60px; width: 60px");
-          }
+          console.log("openweather URL is: ", queryURL);
+
+          var iconCode = response.weather[0].icon;
+          
+          var iconUrl = "http://openweathermap.org/img/w/" + iconCode + ".png";
+          console.log('weather icon URL:', iconUrl); 
+          var currentIcon = $('<img>').attr("src", iconUrl);
+          currentIcon.attr("style", "height: 60px; width: 60px");
+
           var cityNameEl = $("<h2>").text(response.name);
           var displayMainDate = cityNameEl.append(" (" + mainDate + ")");
           var tempF = (response.main.temp - 273.15) * 1.8 + 32;

@@ -1,7 +1,6 @@
 
 /* style the container and header */
-.container {
-    margin: 10% auto;
+.maindiv {
     font-family: 'Lato', sans-serif;
 }
 header {
