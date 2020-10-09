@@ -22,7 +22,7 @@ function buildQueryURL() {
         cityArray.shift();
         cityArray.push(cityName);
     }
-    $.uniqueSort(cityArray);
+    
     $('.list-group').empty();
     for(var i=0; i < cityArray.length; i++){
         var btn = $('<button>')
@@ -31,6 +31,7 @@ function buildQueryURL() {
         $('.list-group').prepend(btn);
         // console.log('cityarray ', cityArray[i]);
     }
+    $.uniqueSort(cityArray);
     return queryURL = startURL + cityName + apiKey;
 }
 
@@ -55,7 +56,7 @@ function updatePage(city){
           var cityNameEl = $("<h2>").text(response.name);
           var displayMainDate = cityNameEl.append(" (" + mainDate + ")");
           var tempF = (response.main.temp - 273.15) * 1.8 + 32;
-          var tempEL = $("<p>").text("Temperature: " + tempF.toFixed(2) + " °F");
+          var tempEL = $("<p>").text("Temperature: " + tempF.toFixed(0) + " °F");
           var humidEl = $("<p>").text("Humidity: " + response.main.humidity + "%");
           var windEl = $("<p>").text("Wind Speed: " + response.wind.speed + " MPH");
           // var uvEL = $("<p>").text("UV Index: " + )
@@ -84,27 +85,43 @@ function updatePage(city){
       $.ajax({
         url: forcastURL,
         method: "GET"
-      }).then(function (response3){
+      }).then(function (response3){ 
             var results = response3.list;
-        //   console.log('forcast info is: ', results);
-          console.log('forecastURL is :', forcastURL);
-        for (var i = 0; i <= results.length; i+=8){
-            var date = results[i].dt_txt;
-            var setDate = date.substr(0,10);
-            var temp = results[i].main.temp;
-            var setTemp = (temp - 273.15) * 1.8 + 32;
-            var fciconCode = response.weather[i].icon;
-          
-          var fciconUrl = "http://openweathermap.org/img/w/" + fciconCode + ".png";
-        //   console.log('weather icon URL:', iconUrl); 
-          var fcIcon = $('<img>').attr("src", fciconUrl);
-          fcIcon.attr("style", "height: 60px; width: 60px");
-            // console.log('date is ', setDate);
-            // console.log('temp is :', setTemp.toFixed(0), "°F");
-            // add day + i 
-        }
-         
-      });
+                // empty out the div 
+                $(".fiveday").empty();
+                // A loop for getting all the forecast info and putting it into variables. 
+                for (var i = 0; i < results.length; i += 8) {
+
+                    // Put a div inside fiveday
+                    var forecastDiv = $("<div class='card shadow-sm text-white bg-info mx-auto mb-5 p-2' style='width: 9.4em; height: 12em;'>");
+                    
+                    // variables for all the results
+                    var date = results[i].dt_txt;
+                    var setD = date.substr(0,10)
+                    var temp = results[i].main.temp;
+                    var tempConv = (temp - 273.15) * 1.8 + 32;
+                    var hum = results[i].main.humidity;
+           
+                    // creating tags with the result items information.....
+                    var h5date = $("<h5 class='card-title'>").text(setD);
+                    var pTemp = $("<p class='card-text'>").text("Temp: " + tempConv.toFixed(0) + "°F");;
+                    var pHum = $("<p class='card-text'>").text("Humidity: " + hum);;
+                    //  get the weather icon
+                    var weatherIcon = results[i].weather[0].icon;
+                    var weathericonUrl = "http://openweathermap.org/img/w/" + weatherIcon + ".png";
+                    var wIcon = $('<img>').attr("src", weathericonUrl);
+                    wIcon.attr("style", "height: 40px; width: 40px");
+        
+        
+                    //append items to.......
+                    forecastDiv.append(h5date);
+                    forecastDiv.append(wIcon);
+                    forecastDiv.append(pTemp);
+                    forecastDiv.append(pHum);
+                    $(".fiveday").append(forecastDiv);
+                }
+        
+            });
 
 }
 
