@@ -9,9 +9,6 @@ function buildQueryURL() {
     // queryURL is the url to query the API
     var startURL = "http://api.openweathermap.org/data/2.5/weather?q=";
     var apiKey = "&appid=568b20af6adfa0aa216b56bfc3c3b3de";
-    cityName = $("#search-city")
-    .val()
-    .trim();
 
     // console.log("city name: ", cityName);
     // console.log(startURL + cityName + apiKey);
@@ -25,13 +22,14 @@ function buildQueryURL() {
         cityArray.shift();
         cityArray.push(cityName);
     }
+    $.uniqueSort(cityArray);
     $('.list-group').empty();
     for(var i=0; i < cityArray.length; i++){
         var btn = $('<button>')
         .addClass("list-group-item list-group-item-action city")
         .text(cityArray[i]);
         $('.list-group').prepend(btn);
-        console.log('cityarray ', cityArray[i]);
+        // console.log('cityarray ', cityArray[i]);
     }
     return queryURL = startURL + cityName + apiKey;
 }
@@ -44,13 +42,13 @@ function updatePage(city){
         url: queryURL,
         method: "GET"
       }).then(function (response){
-          console.log(response);
-          console.log("openweather URL is: ", queryURL);
+        //   console.log(response);
+        //   console.log("openweather URL is: ", queryURL);
 
           var iconCode = response.weather[0].icon;
           
           var iconUrl = "http://openweathermap.org/img/w/" + iconCode + ".png";
-          console.log('weather icon URL:', iconUrl); 
+        //   console.log('weather icon URL:', iconUrl); 
           var currentIcon = $('<img>').attr("src", iconUrl);
           currentIcon.attr("style", "height: 60px; width: 60px");
 
@@ -62,7 +60,7 @@ function updatePage(city){
           var windEl = $("<p>").text("Wind Speed: " + response.wind.speed + " MPH");
           // var uvEL = $("<p>").text("UV Index: " + )
           
-          console.log('cityNameel:', cityNameEl);
+        //   console.log('cityNameel:', cityNameEl);
           $('.city-results').append(displayMainDate, currentIcon, tempEL, humidEl, windEl);
   
           var lat = response.coord.lat;
@@ -73,7 +71,7 @@ function updatePage(city){
               url: queryURLUV,
               method: 'GET'
           }).then(function (response2) {
-              console.log(queryURLUV);
+            //   console.log(queryURLUV);
               var uvlresultsEl = $("<p>").text("UV Index: " + response2.value);
               $('.city-results').append(uvlresultsEl);
       
@@ -88,15 +86,21 @@ function updatePage(city){
         method: "GET"
       }).then(function (response3){
             var results = response3.list;
-          console.log('forcast info is: ', results);
+        //   console.log('forcast info is: ', results);
           console.log('forecastURL is :', forcastURL);
         for (var i = 0; i <= results.length; i+=8){
             var date = results[i].dt_txt;
             var setDate = date.substr(0,10);
             var temp = results[i].main.temp;
             var setTemp = (temp - 273.15) * 1.8 + 32;
-            console.log('date is ', setDate);
-            console.log('temp is :', setTemp.toFixed(0), "°F");
+            var fciconCode = response.weather[i].icon;
+          
+          var fciconUrl = "http://openweathermap.org/img/w/" + fciconCode + ".png";
+        //   console.log('weather icon URL:', iconUrl); 
+          var fcIcon = $('<img>').attr("src", fciconUrl);
+          fcIcon.attr("style", "height: 60px; width: 60px");
+            // console.log('date is ', setDate);
+            // console.log('temp is :', setTemp.toFixed(0), "°F");
             // add day + i 
         }
          
@@ -118,10 +122,23 @@ $(".submitbtn").on("click", function(event) {
     // (in addition to clicks). Prevents the page from reloading on form submit.
     event.preventDefault();
     clear();
+    cityName = $("#search-city")
+    .val()
+    .trim();
     
     buildQueryURL();
     updatePage();
     
+  });
+//   This is the list of buttons down the left side of screen
+  $(document).on('click', '.city', function(event){
+      event.preventDefault();
+      clear();
+      cityName = $(this).text();
+      console.log('Button Clicked');
+
+      buildQueryURL();
+      updatePage();
   });
 
   // save city history to localstorage use that to populate page 
