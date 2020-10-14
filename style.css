@@ -20,6 +20,9 @@ h1 {
     font-size: 1.2em;
     letter-spacing: .05em;
 }
+.temp {
+    padding: 4px;
+}
 
 /* search bar style */
 

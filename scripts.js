@@ -73,9 +73,16 @@ $(document).ready(function () {
                 method: 'GET'
             }).then(function (response2) {
                 //   console.log(queryURLUV);
-                var uvlresultsEl = $("<p>").text("UV Index: " + response2.value);
+                var uvlresultsEl = $("<p>").html("UV Index: " + "<span class='temp'>" + response2.value + "</span>");
+                tempVal = response2.value;
                 $('.city-results').append(uvlresultsEl);
-
+                if (tempVal < 4){
+                    $('.temp').css('background-color', 'rgb(73, 203, 114)');
+                } else if (tempVal > 4 && tempVal < 8){
+                    $('.temp').css('background-color', 'rgb(247, 237, 105)');
+                } else if (tempVal > 8){
+                    $('.temp').css('background-color', 'rgb(247, 91, 88)');
+                }
             });
         }).catch(function (error){
            
