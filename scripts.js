@@ -9,7 +9,7 @@ $(document).ready(function () {
 
     function buildQueryURL(cityName) {
         // queryURL is the url to query the API
-        var startURL = "http://api.openweathermap.org/data/2.5/weather?q=";
+        var startURL = "https://api.openweathermap.org/data/2.5/weather?q=";
         var apiKey = "&appid=568b20af6adfa0aa216b56bfc3c3b3de";
         // Checks for duplicates
         var cityString = cityArray.join("")
@@ -48,7 +48,7 @@ $(document).ready(function () {
 
             var iconCode = response.weather[0].icon;
 
-            var iconUrl = "http://openweathermap.org/img/w/" + iconCode + ".png";
+            var iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png";
             //   console.log('weather icon URL:', iconUrl); 
             var currentIcon = $('<img>').attr("src", iconUrl);
             currentIcon.attr("style", "height: 60px; width: 60px");
@@ -91,7 +91,7 @@ $(document).ready(function () {
             location.reload();
         });
         // forecast URL for gathering info for forecast blocks
-        var forcastURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=568b20af6adfa0aa216b56bfc3c3b3de";
+        var forcastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=568b20af6adfa0aa216b56bfc3c3b3de";
         // get the forecast API info
 
         $.ajax({
@@ -120,7 +120,7 @@ $(document).ready(function () {
                 var pHum = $("<p class='card-text'>").text("Humidity: " + hum);;
                 //  get the weather icon
                 var weatherIcon = results[i].weather[0].icon;
-                var weathericonUrl = "http://openweathermap.org/img/w/" + weatherIcon + ".png";
+                var weathericonUrl = "https://openweathermap.org/img/w/" + weatherIcon + ".png";
                 var wIcon = $('<img>').attr("src", weathericonUrl);
                 wIcon.attr("style", "height: 40px; width: 40px");
 
